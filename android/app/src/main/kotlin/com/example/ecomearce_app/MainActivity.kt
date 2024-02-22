@@ -1,0 +1,6 @@
+package com.example.ecomearce_app
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

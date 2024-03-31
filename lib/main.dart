@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
               current is AuthInitial || current is AuthSuccess,
           builder: (context, state) {
             return MaterialApp(
-              title: 'E-Commerce App',
+              title: 'E-commerce App',
               theme: AppTheme.lightTheme(),
               initialRoute: state is AuthSuccess
                   ? AppRoutes.bottomNavbar

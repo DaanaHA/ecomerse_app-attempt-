@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce_app/models/cart_orders_model.dart';
 import 'package:ecommerce_app/utils/app_colors.dart';
 import 'package:ecommerce_app/view_models/cart_cubit/cart_cubit.dart';
+import 'package:ecommerce_app/view_models/cart_cubit/cart_state.dart';
 import 'package:ecommerce_app/views/widgets/counter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

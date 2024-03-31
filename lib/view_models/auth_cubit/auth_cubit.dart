@@ -1,62 +1,71 @@
 import 'package:ecommerce_app/services/auth_services.dart';
+// import 'package:ecommerce_app/view_models/auth_cubit/auth_state.dart';
+import 'package:ecommerce_app/view_models/auth_cubit/auth_cubit.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ecommerce_app/models/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
+  final authService = AuthenticationServiceImpl();
 
-  final AuthServices authServices = AuthServicesImpl();
-
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  void signInWithEmailAndPassword(String email, String password) async {
     emit(AuthLoading());
     try {
-      final result = await authServices.signInWithEmailAndPassword(email, password);
+      final result =
+          await authService.signInWithEmailAndPassword(email, password);
       if (result) {
         emit(AuthSuccess());
       } else {
-        emit(AuthFailure('Failed to sign in'));
+        //emit(AuthFaliure('Faild'));
+             const Text("Error");
+
       }
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      //emit(AuthFaliure(e.toString()));
+           const Text("Error");
+
     }
   }
 
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+  void signUpWithEmailAndPassword(String email, String password) async {
     emit(AuthLoading());
     try {
-      final result = await authServices.signUpWithEmailAndPassword(email, password);
+      final result =
+          await authService.signUpWithEmailAndPassword(email, password);
       if (result) {
         emit(AuthSuccess());
       } else {
-        emit(AuthFailure('Failed to sign up'));
+       // emit(AuthFaliure('Faild'));
+            const Text("Error");
+
       }
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+     // emit(AuthFaliure(e.toString()));
+     const Text("Error");
     }
   }
 
-  Future<void> signOut() async {
-    emit(AuthLoading());
-    try {
-      await authServices.signOut();
-      emit(AuthInitial());
-    } catch (e) {
-      emit(AuthFailure(e.toString()));
-    }
+  Future<void> logOut() async {
+    await authService.signOut();
+    emit(AuthSuccess());
   }
 
   Future<void> getCurrentUser() async {
     emit(AuthLoading());
     try {
-      final user = await authServices.currentUser();
+      var user = await authService.currentUser();
       if (user != null) {
         emit(AuthSuccess());
       } else {
         emit(AuthInitial());
       }
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthInitial());
     }
   }
 }

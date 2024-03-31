@@ -28,6 +28,8 @@ class ProductItemModel {
   final double price;
   final String category;
   final double averageRate;
+  final bool isFav;
+
 
   ProductItemModel({
     required this.id,
@@ -38,7 +40,8 @@ class ProductItemModel {
     required this.price,
     required this.category,
     this.averageRate = 4.5,
-  });
+    this.isFav = true,
+    });
 
   ProductItemModel copyWith({
     String? id,
@@ -50,6 +53,8 @@ class ProductItemModel {
     double? averageRate,
     int? quantity,
     ProductSize? size,
+    bool? isFav,
+
   }) {
     return ProductItemModel(
       id: id ?? this.id,
@@ -97,6 +102,7 @@ List<ProductItemModel> dummyProducts = [
     imgUrl: 'https://pngimg.com/d/men_shoes_PNG7475.png',
     price: 20,
     category: 'Shoes',
+    isFav: false,
   ),
   ProductItemModel(
     id: 'zuHIOlufjUFsacVn48kt',
@@ -105,6 +111,8 @@ List<ProductItemModel> dummyProducts = [
         'https://www.pngall.com/wp-content/uploads/2016/09/Trouser-Free-Download-PNG.png',
     price: 30,
     category: 'Clothes',
+        isFav: false,
+
   ),
   ProductItemModel(
     id: 'bHCwRrySeNqDFIRzZKZa',
@@ -113,20 +121,18 @@ List<ProductItemModel> dummyProducts = [
         'https://parspng.com/wp-content/uploads/2022/12/tomatopng.parspng.com-6.png',
     price: 10,
     category: 'Groceries',
+        isFav: false,
+
   ),
-  ProductItemModel(
-    id: 'vkvvuIrQM7dGYSXFkkQs',
-    name: 'Pack of Potatoes',
-    imgUrl: 'https://pngimg.com/d/potato_png2398.png',
-    price: 10,
-    category: 'Groceries',
-  ),
+
   ProductItemModel(
     id: 'a2hSaD88h9OnOd0NGAaK',
     name: 'Pack of Onions',
     imgUrl: 'https://pngimg.com/d/onion_PNG99213.png',
     price: 10,
     category: 'Groceries',
+        isFav: false,
+
   ),
   ProductItemModel(
     id: 'wWBXvZt0rPPpinXjbzTI',
@@ -134,6 +140,8 @@ List<ProductItemModel> dummyProducts = [
     imgUrl: 'https://pngfre.com/wp-content/uploads/apple-43-1024x1015.png',
     price: 10,
     category: 'Fruits',
+        isFav: false,
+
   ),
   ProductItemModel(
     id: 'VG6N3kHfRyb7GptZb8B5',
@@ -142,6 +150,17 @@ List<ProductItemModel> dummyProducts = [
         'https://parspng.com/wp-content/uploads/2022/05/orangepng.parspng.com_-1.png',
     price: 10,
     category: 'Fruits',
+        isFav: false,
+
+  ),
+    ProductItemModel(
+    id: 'vkvvuIrQM7dGYSXFkkQs',
+    name: 'Pack of Potatoes',
+    imgUrl: 'https://pngimg.com/d/potato_png2398.png',
+    price: 10,
+    category: 'Groceries',
+        isFav: false,
+
   ),
   ProductItemModel(
     id: 'HDuUqvyuXoXwbmevi9kB',
@@ -150,14 +169,10 @@ List<ProductItemModel> dummyProducts = [
         'https://static.vecteezy.com/system/resources/previews/015/100/096/original/bananas-transparent-background-free-png.png',
     price: 10,
     category: 'Fruits',
+        isFav: false,
+
   ),
-  ProductItemModel(
-    id: 'XxIge7JfwnXGCYm26MoJ',
-    name: 'Pack of Mangoes',
-    imgUrl: 'https://purepng.com/public/uploads/large/mango-tgy.png',
-    price: 10,
-    category: 'Fruits',
-  ),
+  
   ProductItemModel(
     id: 's4pMZiAh7i4S8rdavVHT',
     name: 'Sweet Shirt',
@@ -165,5 +180,16 @@ List<ProductItemModel> dummyProducts = [
         'https://www.usherbrand.com/cdn/shop/products/5uYjJeWpde9urtZyWKwFK4GHS6S3thwKRuYaMRph7bBDyqSZwZ_87x1mq24b2e7_1800x1800.png',
     price: 15,
     category: 'Clothes',
+        isFav: false,
+
+  ),
+  ProductItemModel(
+    id: 'XxIge7JfwnXGCYm26MoJ',
+    name: 'Pack of Mangoes',
+    imgUrl: 'https://purepng.com/public/uploads/large/mango-tgy.png',
+    price: 10,
+    category: 'Fruits',
+        isFav: false,
+
   ),
 ];

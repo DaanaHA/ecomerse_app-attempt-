@@ -10,7 +10,7 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
   ProductDetailsCubit() : super(ProductDetailsInitial());
 
   final productDetailsServices = ProductDetailsServicesImpl();
-  final authServices = AuthServicesImpl();
+  final authServices = AuthenticationServiceImpl();
 
   ProductSize? size;
   int counter = 1;

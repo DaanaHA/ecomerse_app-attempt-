@@ -1,59 +1,49 @@
 import 'package:ecommerce_app/services/firestore_services.dart';
-import 'package:ecommerce_app/utils/api_paths.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:ecommerce_app/models/user.dart';
 
-abstract class AuthServices {
+abstract class AuthenticationService {
   Future<bool> signInWithEmailAndPassword(String email, String password);
   Future<bool> signUpWithEmailAndPassword(String email, String password);
   Future<void> signOut();
   Future<User?> currentUser();
 }
 
-class AuthServicesImpl implements AuthServices {
-  // Singleton Design Pattern
-  final firebaseAuth = FirebaseAuth.instance;
-  final firestoreServices = FirestoreService.instance;
+class AuthenticationServiceImpl extends AuthenticationService {
+  final instance = FirebaseAuth.instance;
 
   @override
   Future<bool> signInWithEmailAndPassword(String email, String password) async {
-    final userCredential = await firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    final userCredential = await instance.signInWithEmailAndPassword(
+        email: email, password: password);
     User? user = userCredential.user;
     if (user != null) {
       return true;
+    } else {
+      return false;
     }
-    return false;
-  }
-
-  @override
-  Future<void> signOut() async {
-    firebaseAuth.signOut();
   }
 
   @override
   Future<bool> signUpWithEmailAndPassword(String email, String password) async {
-    final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    final userCredential = await instance.createUserWithEmailAndPassword(
+        email: email, password: password);
     User? user = userCredential.user;
+
     if (user != null) {
-      await firestoreServices.setData(path: ApiPaths.user(user.uid), data: {
-        'uid': user.uid,
-        'email': user.email,
-        'name': user.displayName,
-        'phone': user.phoneNumber,
-        'photoUrl': user.photoURL,
-      });
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
-  
+
+  @override
+  Future<void> signOut() async {
+    await instance.signOut();
+  }
+
   @override
   Future<User?> currentUser() {
-    return Future.value(firebaseAuth.currentUser);
+    return Future.value(instance.currentUser); //what is the diff asyn await return future.value
   }
 }

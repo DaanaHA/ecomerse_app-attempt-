@@ -1,18 +1,21 @@
-part of 'home_cubit.dart';
+import 'package:ecommerce_app/models/product_item_model.dart';
 
-sealed class HomeState {}
 
-final class HomeInitial extends HomeState {}
+class HomeStatus {}
 
-final class HomeLoading extends HomeState {}
+class HomeInitial extends HomeStatus {}
 
-final class HomeLoaded extends HomeState {
-  final List<ProductItemModel> products;
-  final List<AnnouncementModel> announcements;
-  HomeLoaded(this.products, this.announcements);
+class HomeLoading extends HomeStatus {}
+
+class HomeLoaded extends HomeStatus {
+  List<ProductItemModel> dummyProducts;
+  List<ProductItemModel> favProducts;
+
+  HomeLoaded(this.dummyProducts, this.favProducts);
 }
 
-final class HomeError extends HomeState {
-  final String message;
-  HomeError(this.message);
+class HomeError extends HomeStatus {
+  final String errorMsg;
+
+  HomeError({required this.errorMsg});
 }

@@ -1,27 +1,22 @@
-part of 'checkout_cubit.dart';
+import 'package:ecommerce_app/models/cart_orders_model.dart';
+import 'package:ecommerce_app/models/product_item_model.dart';
+import 'package:ecommerce_app/models/category.dart';
+import 'package:ecommerce_app/models/product_item_model.dart';
 
-sealed class CheckoutState {}
+class CheckoutStatus {}
 
-final class CheckoutInitial extends CheckoutState {}
+class CheckoutInitial extends CheckoutStatus {}
 
-final class CheckoutLoading extends CheckoutState {}
+class CheckoutLoading extends CheckoutStatus {}
 
-final class CheckoutError extends CheckoutState {
-  final String message;
-
-  CheckoutError(this.message);
+class CheckoutSucess extends CheckoutStatus {
+  List<CartOrdersModel> shoppingItems;
+  List<ProductItemModel> products;
+  String address;
+  CheckoutSucess(this.shoppingItems,this.address,this.products);
 }
 
-final class CheckoutLoaded extends CheckoutState {
-  final List<CartOrdersModel> cartItems;
-  final AddressModel preferredLocation;
-  final PaymentMethodModel preferredPaymentMethod;
-  final double totalAmount;
-
-  CheckoutLoaded({
-    required this.cartItems,
-    required this.preferredLocation,
-    required this.preferredPaymentMethod,
-    required this.totalAmount,
-  });
+class CheckoutError extends CheckoutStatus {
+  String message;
+  CheckoutError(this.message);
 }

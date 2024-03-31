@@ -1,6 +1,8 @@
-//import 'package:ecommerce_app/models/product_item_model.dart';
+import 'package:ecommerce_app/models/product_item_model.dart';
+import 'package:ecommerce_app/models/announcement_model.dart';
 import 'package:ecommerce_app/utils/route/app_routes.dart';
 import 'package:ecommerce_app/view_models/home_cubit/home_cubit.dart';
+import 'package:ecommerce_app/view_models/home_cubit/home_state.dart';
 import 'package:ecommerce_app/views/widgets/custom_carousel_indicatior.dart';
 import 'package:ecommerce_app/views/widgets/product_item.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,7 @@ class HomeTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<HomeCubit>(context);      
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<HomeCubit, HomeStatus>(
       bloc: cubit,
       buildWhen: (previous, current) =>
           current is HomeLoading ||

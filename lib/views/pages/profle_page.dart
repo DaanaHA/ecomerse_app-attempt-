@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
           return MainButton(
             title: 'Logout',
             onPressed: () async {
-              await authCubit.signOut();
+              await authCubit.logOut();
             },
           );
         },

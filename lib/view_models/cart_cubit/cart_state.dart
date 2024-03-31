@@ -1,47 +1,22 @@
-part of 'cart_cubit.dart';
+import 'package:ecommerce_app/models/cart_orders_model.dart';
+import 'package:ecommerce_app/models/product_item_model.dart';
+import 'package:ecommerce_app/views/pages/cart_page.dart';
 
-sealed class CartState {}
+class CartStatus {}
 
-final class CartInitial extends CartState {}
+class CartInitial extends CartStatus {}
 
-final class CartLoading extends CartState {}
-
-final class QuantityCounterLoading extends CartState {
-  final String cartOrderId;
-
-  QuantityCounterLoading({required this.cartOrderId});
+class CartLoaded extends CartStatus {
+  List<CartOrdersModel> shoppingItems;
+  List<ProductItemModel> products;
+  double totalPrice;
+  CartLoaded(this.shoppingItems, this.products,this.totalPrice);
 }
 
-final class QuantityCounterLoaded extends CartState {
-  final int value;
-  final CartOrdersModel cartOrder;
+class CartLoading extends CartStatus {}
 
-  QuantityCounterLoaded({
-    required this.value,
-    required this.cartOrder,
-  });
-}
+class CartError extends CartStatus {
+  final String errorMsg;
 
-final class QuantityCounterError extends CartState {
-  final String message;
-
-  QuantityCounterError({required this.message});
-}
-
-final class CartLoaded extends CartState {
-  final List<CartOrdersModel> cartItems;
-  final double subtotal;
-
-  CartLoaded({
-    required this.cartItems,
-    required this.subtotal,
-  });
-}
-
-final class CartError extends CartState {
-  final String message;
-
-  CartError({
-    required this.message,
-  });
+  CartError(this.errorMsg);
 }

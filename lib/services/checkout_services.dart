@@ -26,7 +26,7 @@ class CheckoutServicesImpl implements CheckoutServices {
   Future<List<AddressModel>> getAddresses(String uid,
           {bool fetchPreferred = false}) async =>
       await firestoreService.getCollection<AddressModel>(
-        path: ApiPaths.addresses(uid),
+        path: ApiPaths.getAds(uid),
         builder: (data, documentId) => AddressModel.fromMap(data),
         queryBuilder: fetchPreferred ? (query) => query.where('isFav', isEqualTo: true) : null,
       );

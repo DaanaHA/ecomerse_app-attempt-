@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         final cubit = HomeCubit();
-        cubit.getHomeData();
+        cubit.getData();
         return cubit;
       },
       child: const DefaultTabController(

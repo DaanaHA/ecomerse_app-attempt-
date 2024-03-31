@@ -12,7 +12,7 @@ class HomeServicesImpl implements HomeServices {
   @override
   Future<List<ProductItemModel>> getProducts() async =>
       await firestoreService.getCollection<ProductItemModel>(
-        path: ApiPaths.products(),
+        path: ApiPaths.products,
         builder: (data, documentId) =>
             ProductItemModel.fromMap(data, documentId),
       );

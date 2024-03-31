@@ -1,10 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce_app/services/home_services.dart';
+import 'package:ecommerce_app/view_models/categories_cubit/categories_cubit.dart';
+import 'package:ecommerce_app/view_models/categories_cubit/categories_state.dart';
+import 'package:ecommerce_app/models/category.dart';
+import 'package:ecommerce_app/models/product_item_model.dart';
+import 'package:ecommerce_app/utils/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CategoriesTabView extends StatelessWidget {
-  const CategoriesTabView({super.key});
+class CategoriesTap extends StatelessWidget {
+  const CategoriesTap({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Categories Tab View'),);
+    return BlocProvider(
+      create: (context) => CategoriesCubit()..getData(),
+      child: BlocBuilder<CategoriesCubit, CategoriesStatus>(
+        builder: (context, state) {
+          if (state is CategoriesLoaded) {
+            final dummyProducts = state.dummyProducts;
+            debugPrint(
+                'categories page:${state.dummyCategories[0].categoryName}');
+
+            return ListView.builder(
+                itemCount: state.dummyCategories.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  debugPrint(state.dummyCategories[index].categoryName);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(children: [
+                      Card(
+                        child: CachedNetworkImage(
+                            imageUrl: state.dummyCategories[index].categoryImg,
+                            height: 130,
+                            width: double.infinity,
+                            fit: BoxFit.cover),
+                      ),
+                      Positioned(
+                          bottom: 60,
+                          left: 15,
+                          child: Column(
+                            children: [
+                              Text(
+                                state.dummyCategories[index].categoryName,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      color: AppColors.black,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                              ),
+                              Text(
+                                  '${countProductsInCategory(state.dummyCategories[index].categoryName, dummyProducts, state.dummyCategories).toString()} Product'),
+                            ],
+                          )),
+                    ]),
+                  );
+                });
+          } else if (state is CategoriesLoading) {
+            return const Center(child: CircularProgressIndicator.adaptive());
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
+    );
   }
+}
+
+int countProductsInCategory(String categoryName, List<ProductItemModel> dummyProduct,
+    List<Category> dummyCategory) {
+  debugPrint('categories page: ${categoryName} here');
+  int count = 0;
+
+  dummyProduct.forEach((element) {
+    
+    dummyCategory[int.parse(element.id)-1].categoryName ==
+            categoryName
+        ? count++
+        : 0;
+  });
+  debugPrint('categories page: $count');
+  return count;
 }

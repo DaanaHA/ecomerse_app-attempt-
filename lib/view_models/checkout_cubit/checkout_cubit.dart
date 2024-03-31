@@ -7,38 +7,40 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'checkout_state.dart';
 
-class CheckoutCubit extends Cubit<CheckoutState> {
+class CheckoutCubit extends Cubit<CheckoutStatus> {
   CheckoutCubit() : super(CheckoutInitial());
+  final _cartService = CartServiceImp();
+  final _authService = AuthenticationServiceImpl();
+  final _userService = UserServiceImp();
+  final _homeService = HomeServiceImp();
 
-  final checkoutServices = CheckoutServicesImpl();
-  final authServices = AuthServicesImpl();
-
-  Future<void> getCheckoutPage() async {
+  void uploadData() async {
     emit(CheckoutLoading());
     try {
-      final currentUser = await authServices.currentUser();
-      final cartItems = await checkoutServices.getCartItems(currentUser!.uid);
-      final preferredLocation = (await checkoutServices.getAddresses(
-        currentUser.uid,
-        fetchPreferred: true,
-      ))
-          .first;
-      final preferredPaymentMethod = (await checkoutServices.getPaymentMethods(
-        currentUser.uid,
-        fetchPreferred: true,
-      ))
-          .first;
-      final subtotal = cartItems.fold<double>(0, (sum, cartItem) => sum + (cartItem.product.price * cartItem.quantity));
-      emit(
-        CheckoutLoaded(
-          cartItems: cartItems,
-          preferredLocation: preferredLocation,
-          preferredPaymentMethod: preferredPaymentMethod,
-          totalAmount: subtotal + 10,
-        ),
-      );
+      var orders = await _cartService.getData();
+      var products = await _homeService.getData();
+      final user = await _authService.currentUser();
+      final users = await _userService.getData();
+      final dummyUserData =
+          users.firstWhere((element) => element.email == user?.email);
+
+      emit(CheckoutSucess(orders, dummyUserData.address, products));
     } catch (e) {
       emit(CheckoutError(e.toString()));
     }
+  }
+
+  void deleteData() async {
+    var products = await _homeService.getData();
+    final user = await _authService.currentUser();
+    final users = await _userService.getData();
+    final dummyUserData =
+        users.firstWhere((element) => element.email == user?.email);
+    var orders = await _cartService.getData();
+    orders.forEach((element) {
+      _cartService.deleteData(element.id);
+    });
+    orders.clear();
+    emit(CheckoutSucess(orders, dummyUserData.address, products));
   }
 }

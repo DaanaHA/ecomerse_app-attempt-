@@ -2,6 +2,8 @@ import 'package:ecommerce_app/models/cart_orders_model.dart';
 import 'package:ecommerce_app/models/product_item_model.dart';
 import 'package:ecommerce_app/services/firestore_services.dart';
 import 'package:ecommerce_app/utils/api_paths.dart';
+import 'package:ecommerce_app/services/checkout_services.dart';
+
 
 abstract class ProductDetailsServices {
   Future<ProductItemModel> getProduct(String id);
@@ -14,7 +16,7 @@ class ProductDetailsServicesImpl implements ProductDetailsServices {
   @override
   Future<ProductItemModel> getProduct(String id) async =>
       await firestoreService.getDocument<ProductItemModel>(
-        path: ApiPaths.product(id),
+        path: ApiPaths.products,
         builder: (data, documentId) =>
             ProductItemModel.fromMap(data, documentId),
       );
@@ -22,7 +24,7 @@ class ProductDetailsServicesImpl implements ProductDetailsServices {
   @override
   Future<void> addToCart(String uid, CartOrdersModel cartOrder) async =>
       await firestoreService.setData(
-        path: ApiPaths.cartItem(uid, cartOrder.id),
+        path: ApiPaths.cartItems(uid, ),
         data: cartOrder.toMap(),
       );
 }

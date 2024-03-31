@@ -1,45 +1,40 @@
 // import 'package:ecommerce_app/models/product_item_model.dart';
 // import 'package:ecommerce_app/services/firestore_services.dart';
 // import 'package:ecommerce_app/utils/api_paths.dart';
-import 'package:ecommerce_app/utils/app_assets.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce_app/services/firestore_services.dart';
 import 'package:ecommerce_app/utils/app_colors.dart';
 import 'package:ecommerce_app/view_models/cart_cubit/cart_cubit.dart';
 import 'package:ecommerce_app/views/pages/cart_page.dart';
 import 'package:ecommerce_app/views/pages/favorites_page.dart';
 import 'package:ecommerce_app/views/pages/home_page.dart';
 import 'package:ecommerce_app/views/pages/profle_page.dart';
+import 'package:ecommerce_app/views/pages/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
-class CustomBottomNavbar extends StatefulWidget {
-  const CustomBottomNavbar({super.key});
+class CustomBottomBar extends StatefulWidget {
+  const CustomBottomBar({super.key});
 
   @override
-  State<CustomBottomNavbar> createState() => _CustomBottomNavbarState();
+  State<CustomBottomBar> createState() => _CustomBottomBarState();
 }
 
-class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
-  late PersistentTabController _controller;
-
+class _CustomBottomBarState extends State<CustomBottomBar> {
+  final _firestoreService = FirestoreService.instance;
+  
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController();
+    
   }
 
   List<Widget> _buildScreens() {
     return [
       const HomePage(),
-      const FavoritesPage(),
-      BlocProvider(
-        create: (context) {
-          final cubit = CartCubit();
-          cubit.getCartItems();
-          return cubit;
-        },
-        child: const CartPage(),
-      ),
+      const FavoritePage(),
+      const CartPage(),
       const ProfilePage(),
     ];
   }
@@ -47,30 +42,26 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        inactiveIcon: const Icon(Icons.home_outlined),
-        icon: const Icon(Icons.home_filled),
-        title: "Home",
+        icon: const Icon(Icons.home),
+        title: ("Home"),
         activeColorPrimary: AppColors.primary,
         inactiveColorPrimary: AppColors.grey,
       ),
       PersistentBottomNavBarItem(
-        inactiveIcon: const Icon(Icons.favorite_border),
         icon: const Icon(Icons.favorite),
-        title: "Favorites",
+        title: ("Favorite"),
         activeColorPrimary: AppColors.primary,
         inactiveColorPrimary: AppColors.grey,
       ),
-      PersistentBottomNavBarItem(
-        inactiveIcon: const Icon(Icons.shopping_cart_outlined),
-        icon: const Icon(Icons.shopping_cart),
-        title: "Cart",
+      (PersistentBottomNavBarItem(
+        icon: const Icon(Icons.shopping_basket),
+        title: ("Cart"),
         activeColorPrimary: AppColors.primary,
         inactiveColorPrimary: AppColors.grey,
-      ),
+      )),
       PersistentBottomNavBarItem(
-        inactiveIcon: const Icon(Icons.person_outline),
-        icon: const Icon(Icons.person),
-        title: "Profile",
+        icon: const Icon(Icons.settings),
+        title: ("Settings"),
         activeColorPrimary: AppColors.primary,
         inactiveColorPrimary: AppColors.grey,
       ),
@@ -79,70 +70,85 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
 
   @override
   Widget build(BuildContext context) {
+    PersistentTabController _controller;
+
+    _controller = PersistentTabController(initialIndex: 0);
+
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.all(4.0),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundImage: NetworkImage(AppAssets.userImage),
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hi, Tarek',
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+        appBar: AppBar(
+          actions: [
+            InkWell(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(builder: (context) => SearchPage()));
+                },
+                child: const Icon(Icons.search)),
+            const SizedBox(
+              width: 6,
             ),
-            Text(
-              'Let\'s go shopping!',
-              style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: AppColors.grey,
-                  ),
+            const Icon(Icons.notifications),
+            const SizedBox(
+              width: 6,
             ),
           ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
+          leading: const Padding(
+            padding: EdgeInsets.all(4.0),
+            child: CircleAvatar(
+              radius: 10,
+              backgroundImage: CachedNetworkImageProvider(
+                  'https://www.indiewire.com/wp-content/uploads/2019/03/151442_6876.jpg'),
+            ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_none),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hi, Morfi',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.black,
+                    ),
+              ),
+              Text(
+                'Let\'s go shopping!',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.grey,
+                    ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        stateManagement: false,
-        resizeToAvoidBottomInset:
-            true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        hideNavigationBarWhenKeyboardShows:
-            true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        popAllScreensOnTapOfSelectedTab: true,
-        popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: const ItemAnimationProperties(
-          // Navigation Bar's items animation properties.
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
         ),
-        screenTransitionAnimation: const ScreenTransitionAnimation(
-          // Screen transition animation on change of selected tab.
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle:
-            NavBarStyle.style3, // Choose the nav bar style with this property.
-      ),
-    );
+        body: PersistentTabView(
+          context,
+          controller: _controller,
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+
+          confineInSafeArea: true,
+          backgroundColor: AppColors.white, 
+          handleAndroidBackButtonPress: true, 
+          resizeToAvoidBottomInset:
+              true, 
+          stateManagement:
+              false, 
+          hideNavigationBarWhenKeyboardShows:
+              true, 
+          decoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            colorBehindNavBar: Colors.white,
+          ),
+          popAllScreensOnTapOfSelectedTab: true,
+          popActionScreens: PopActionScreensType.all,
+          itemAnimationProperties: const ItemAnimationProperties(
+            duration: Duration(milliseconds: 200),
+            curve: Curves.bounceIn,
+          ),
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            animateTabTransition: true,
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 200),
+          ),
+          navBarStyle: NavBarStyle.style6,
+        ));
   }
 }
